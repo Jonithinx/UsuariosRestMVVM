@@ -1,0 +1,10 @@
+# Visual Studio / .NET / MAUI
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.DS_Store
+Thumbs.db

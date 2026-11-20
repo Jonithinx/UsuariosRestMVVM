@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:UsuariosRestMVVM.ViewModels"
+             x:Class="UsuariosRestMVVM.Views.CrearUsuarioPage"
+             x:DataType="vm:CrearUsuarioViewModel"
+             Title="Nuevo Usuario"
+             BackgroundColor="{AppThemeBinding Light=#F4F5F7, Dark=#121212}">
+
+    <Grid Padding="16">
+        <ScrollView>
+            <VerticalStackLayout Spacing="16">
+
+                <!-- Tarjeta del formulario -->
+                <Border Padding="20"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="1"
+                        Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#2D2D30}"
+                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E1E20}">
+                    <VerticalStackLayout Spacing="14">
+
+                        <Label Text="Registrar nuevo usuario"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#111827, Dark=#F9FAFB}" />
+
+                        <!-- Name -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Nombre completo"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#374151, Dark=#D1D5DB}" />
+                            <Entry Text="{Binding Name}"
+                                   Placeholder="Ej. Ana García"
+                                   ReturnType="Next" />
+                        </VerticalStackLayout>
+
+                        <!-- Email -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Correo electrónico"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#374151, Dark=#D1D5DB}" />
+                            <Entry Text="{Binding Email}"
+                                   Placeholder="Ej. ana@ejemplo.com"
+                                   Keyboard="Email"
+                                   ReturnType="Next" />
+                        </VerticalStackLayout>
+
+                        <!-- Phone -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Teléfono"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#374151, Dark=#D1D5DB}" />
+                            <Entry Text="{Binding Phone}"
+                                   Placeholder="Ej. 555-123-4567"
+                                   Keyboard="Telephone"
+                                   ReturnType="Next" />
+                        </VerticalStackLayout>
+
+                        <!-- Website -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Sitio web"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#374151, Dark=#D1D5DB}" />
+                            <Entry Text="{Binding Website}"
+                                   Placeholder="Ej. anagarcia.dev"
+                                   Keyboard="Url"
+                                   ReturnType="Done" />
+                        </VerticalStackLayout>
+
+                        <Button Text="Crear Usuario (POST)"
+                                Command="{Binding GuardarUsuarioCommand}"
+                                FontAttributes="Bold"
+                                Margin="0,8,0,0" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Mensaje de error -->
+                <Border IsVisible="{Binding HasError}"
+                        BackgroundColor="{AppThemeBinding Light=#FEE2E2, Dark=#450A0A}"
+                        Stroke="{AppThemeBinding Light=#EF4444, Dark=#DC2626}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="16">
+                    <Label Text="{Binding ErrorMessage}"
+                           TextColor="{AppThemeBinding Light=#991B1B, Dark=#FCA5A5}"
+                           FontSize="14" />
+                </Border>
+
+                <!-- Recuadro destacado con el ID devuelto por la API -->
+                <Border IsVisible="{Binding HasResultado}"
+                        BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                        Stroke="{AppThemeBinding Light=#10B981, Dark=#34D399}"
+                        StrokeThickness="1.5"
+                        StrokeShape="RoundRectangle 14"
+                        Padding="20">
+                    <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                        <Label Text="¡Usuario creado con éxito!"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light=#065F46, Dark=#A7F3D0}" />
+                        <Label Text="{Binding UsuarioCreadoId, StringFormat='ID devuelto por la API: {0}'}"
+                               FontSize="22"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light=#047857, Dark=#6EE7B7}" />
+                        <Label Text="{Binding ResultadoMensaje}"
+                               FontSize="14"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light=#065F46, Dark=#D1FAE5}" />
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Indicador de carga -->
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+    </Grid>
+</ContentPage>

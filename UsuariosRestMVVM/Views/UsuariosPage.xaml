@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:UsuariosRestMVVM.ViewModels"
+             xmlns:models="clr-namespace:UsuariosRestMVVM.Models"
+             x:Class="UsuariosRestMVVM.Views.UsuariosPage"
+             x:DataType="vm:UsuariosViewModel"
+             Title="Usuarios"
+             BackgroundColor="{AppThemeBinding Light=#F4F5F7, Dark=#121212}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="+ Nuevo"
+                     Command="{Binding IrACrearCommand}"
+                     Order="Primary"
+                     Priority="0" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,*" Padding="16,12,16,0">
+
+        <!-- Banner de error -->
+        <Border Grid.Row="0"
+                IsVisible="{Binding HasError}"
+                BackgroundColor="{AppThemeBinding Light=#FEE2E2, Dark=#450A0A}"
+                Stroke="{AppThemeBinding Light=#EF4444, Dark=#DC2626}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                Padding="14"
+                Margin="0,0,0,12">
+            <VerticalStackLayout Spacing="8">
+                <Label Text="{Binding ErrorMessage}"
+                       TextColor="{AppThemeBinding Light=#991B1B, Dark=#FCA5A5}"
+                       FontSize="13" />
+                <Button Text="Reintentar"
+                        Command="{Binding CargarUsuariosCommand}"
+                        HorizontalOptions="Start"
+                        Padding="14,6"
+                        MinimumHeightRequest="36"
+                        FontSize="13" />
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Listado con RefreshView -->
+        <RefreshView Grid.Row="1"
+                     IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding CargarUsuariosCommand}">
+            <CollectionView ItemsSource="{Binding Usuarios}"
+                            SelectionMode="None">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout VerticalOptions="Center"
+                                         HorizontalOptions="Center"
+                                         Spacing="8"
+                                         Padding="24">
+                        <Label Text="No hay usuarios para mostrar"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                        <Label Text="Desliza hacia abajo para actualizar"
+                               FontSize="13"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Usuario">
+                        <Border Margin="0,0,0,12"
+                                Padding="16"
+                                StrokeShape="RoundRectangle 14"
+                                StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#2D2D30}"
+                                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E1E20}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UsuariosViewModel}}, Path=IrADetalleCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                                <!-- Avatar con inicial / ID -->
+                                <Border Grid.Column="0"
+                                        WidthRequest="46"
+                                        HeightRequest="46"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 23"
+                                        VerticalOptions="Center"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark=#312E81}">
+                                    <Label Text="{Binding Id, StringFormat='#{0}'}"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           FontAttributes="Bold"
+                                           FontSize="14"
+                                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                </Border>
+
+                                <!-- Datos del usuario -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                                    <Label Text="{Binding Name}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light=#111827, Dark=#F9FAFB}"
+                                           LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding Email}"
+                                           FontSize="13"
+                                           TextColor="{AppThemeBinding Light=#4B5563, Dark=#D1D5DB}"
+                                           LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding Website}"
+                                           FontSize="12"
+                                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                                           LineBreakMode="TailTruncation" />
+                                </VerticalStackLayout>
+
+                                <!-- Indicador de navegación -->
+                                <Label Grid.Column="2"
+                                       Text="›"
+                                       FontSize="24"
+                                       VerticalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Indicador de carga -->
+        <ActivityIndicator Grid.RowSpan="2"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+    </Grid>
+</ContentPage>
